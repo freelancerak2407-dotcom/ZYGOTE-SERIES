@@ -1,26 +1,26 @@
 [build]
-  command = "cd admin && npm ci && npm run build"
-  publish = "admin/out"
+command = "cd admin && npm ci && npm run build"
+publish = "admin/out"
 
 [build.environment]
-  NODE_VERSION = "18"
-  CI = "true"
+NODE_VERSION = "18"
+CI = "true"
 
 [dev]
-  command = "cd admin && npm run dev"
-  port = 3000
+command = "cd admin && npm run dev"
+port = 3000
 
 [[redirects]]
-  from = "/api/*"
-  to = "https://api.zygote.com/api/:splat"
-  status = 200
-  force = true
+from = "/api/*"
+to = "https://api.zygote.com/api/:splat"
+status = 200
+force = true
 
 [[headers]]
-  for = "/*"
-  [headers.values]
-    X-Frame-Options = "DENY"
-    X-Content-Type-Options = "nosniff"
-    X-XSS-Protection = "1; mode=block"
-    Referrer-Policy = "strict-origin-when-cross-origin"
-    Cache-Control = "public, max-age=3600, must-revalidate"
+for = "/*"
+[headers.values]
+X-Frame-Options = "DENY"
+X-Content-Type-Options = "nosniff"
+X-XSS-Protection = "1; mode=block"
+Referrer-Policy = "strict-origin-when-cross-origin"
+Cache-Control = "public, max-age=3600, must-revalidate"

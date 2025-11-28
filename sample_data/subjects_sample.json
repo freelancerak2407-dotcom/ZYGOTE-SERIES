@@ -1,0 +1,16 @@
+[
+  {
+    "title": "Biochemistry",
+    "slug": "biochemistry",
+    "year": 1,
+    "chapters": [
+      {
+        "title": "Carbohydrate Metabolism",
+        "subtopics": [
+          { "title": "Glycolysis" },
+          { "title": "Kreb's Cycle" }
+        ]
+      }
+    ]
+  }
+]

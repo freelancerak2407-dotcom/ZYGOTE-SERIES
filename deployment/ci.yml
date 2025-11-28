@@ -1,0 +1,41 @@
+name: Zygote CI/CD
+
+on:
+  push:
+    branches: [ "main" ]
+  name: Zygote CI/CD
+
+  on:
+    push:
+      branches: [ "main" ]
+    pull_request:
+      branches: [ "main" ]
+
+  jobs:
+    build-backend:
+      runs-on: ubuntu-latest
+      steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18.x'
+      - name: Install Backend Deps
+        run: cd backend && yarn install
+      - name: Build Backend
+        run: cd backend && yarn build
+      - name: Run Tests
+        run: echo "Running backend tests..." # Add actual test command
+
+    build-admin:
+      runs-on: ubuntu-latest
+      steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18.x'
+      - name: Install Admin Deps
+        run: cd admin && npm install
+      - name: Build Admin
+        run: cd admin && npm run build

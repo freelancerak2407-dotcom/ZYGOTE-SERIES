@@ -1,0 +1,37 @@
+{
+  "layout": {
+    "grid": {
+      "columns": 12,
+      "gutter": "24px",
+      "margin": "auto",
+      "maxWidth": "1280px"
+    },
+    "breakpoints": {
+      "mobile": "375px",
+      "tablet": "768px",
+      "desktop": "1024px",
+      "wide": "1440px"
+    }
+  },
+  "components": {
+    "card": {
+      "borderRadius": "16px",
+      "padding": "24px",
+      "background": "#FFFFFF",
+      "shadow": "soft"
+    },
+    "button": {
+      "height": "48px",
+      "borderRadius": "8px",
+      "padding": "0 24px",
+      "fontSize": "16px",
+      "fontWeight": "600"
+    },
+    "input": {
+      "height": "48px",
+      "borderRadius": "8px",
+      "border": "1px solid #E5E7EB",
+      "background": "#F9FAFB"
+    }
+  }
+}

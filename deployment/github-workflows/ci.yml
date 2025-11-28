@@ -1,0 +1,55 @@
+name: Zygote CI/CD
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-backend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./backend
+    steps:
+    - uses: actions/checkout@v3
+    - name: Use Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18.x'
+    - run: yarn install
+    - run: yarn build
+    # - run: yarn test  # Uncomment when tests are added
+
+  build-admin:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./admin
+    steps:
+    - uses: actions/checkout@v3
+    - name: Use Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18.x'
+    - run: npm ci
+    - run: npm run build
+    # - run: npm run lint
+
+  # Deploy Job (Example for SSH deployment)
+  # deploy:
+  #   needs: [build-backend, build-admin]
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Deploy to VPS
+  #       uses: appleboy/ssh-action@master
+  #       with:
+  #         host: ${{ secrets.HOST }}
+  #         username: ${{ secrets.USERNAME }}
+  #         key: ${{ secrets.SSH_KEY }}
+  #         script: |
+  #           cd /var/www/zygote
+  #           git pull origin main
+  #           cd backend && yarn install && npx prisma migrate deploy && pm2 restart zygote-backend
+  #           cd ../admin && npm install && npm run build && pm2 restart zygote-admin

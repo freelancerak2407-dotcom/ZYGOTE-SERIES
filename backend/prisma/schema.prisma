@@ -1,0 +1,123 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  STUDENT
+  ADMIN
+  EDITOR
+}
+
+enum ContentType {
+  NOTE
+  SUMMARY
+  MINDMAP
+  MCQ
+}
+
+enum JobStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  name      String
+  role      Role     @default(STUDENT)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  progress      UserProgress[]
+  subscriptions Subscription[]
+  importJobs    ImportJob[]
+}
+
+model Subscription {
+  id        String   @id @default(uuid())
+  userId    String
+  planId    String
+  status    String   // active, canceled, past_due
+  startDate DateTime
+  endDate   DateTime
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model Subject {
+  id       String    @id @default(uuid())
+  title    String
+  slug     String    @unique
+  year     Int       // 1, 2, 3, 4
+  order    Int       @default(0)
+  chapters Chapter[]
+}
+
+model Chapter {
+  id        String     @id @default(uuid())
+  title     String
+  subjectId String
+  order     Int        @default(0)
+  subject   Subject    @relation(fields: [subjectId], references: [id])
+  subtopics Subtopic[]
+}
+
+model Subtopic {
+  id          String   @id @default(uuid())
+  title       String
+  chapterId   String
+  order       Int      @default(0)
+  contentNote String?  @db.Text // HTML content for Notes
+  summary     String?  @db.Text
+  mindmapUrl  String?
+  
+  chapter     Chapter  @relation(fields: [chapterId], references: [id])
+  mcqs        MCQ[]
+  progress    UserProgress[]
+}
+
+model MCQ {
+  id          String   @id @default(uuid())
+  subtopicId  String
+  question    String
+  options     String[] // Array of strings
+  correctIdx  Int
+  explanation String?  @db.Text
+  
+  subtopic    Subtopic @relation(fields: [subtopicId], references: [id])
+}
+
+model UserProgress {
+  id          String   @id @default(uuid())
+  userId      String
+  subtopicId  String
+  isCompleted Boolean  @default(false)
+  lastReadAt  DateTime @default(now())
+
+  user     User     @relation(fields: [userId], references: [id])
+  subtopic Subtopic @relation(fields: [subtopicId], references: [id])
+
+  @@unique([userId, subtopicId])
+}
+
+model ImportJob {
+  id        String    @id @default(uuid())
+  userId    String
+  type      String    // 'MCQ', 'SUBJECT'
+  fileUrl   String
+  status    JobStatus @default(PENDING)
+  report    String?   @db.Text // JSON string of errors
+  createdAt DateTime  @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+}

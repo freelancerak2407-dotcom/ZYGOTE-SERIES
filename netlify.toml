@@ -1,0 +1,11 @@
+﻿build = "cd admin && npm ci && npm run build"
+publish = "admin/out"
+base = "/"
+
+[build.environment]
+  NODE_VERSION = "18"
+  CI = "true"
+
+[dev]
+  command = "cd admin && npm run dev"
+  port = 3000
